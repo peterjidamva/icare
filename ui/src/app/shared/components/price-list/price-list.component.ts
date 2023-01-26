@@ -5,6 +5,7 @@ import {
   OnInit,
   SimpleChanges,
 } from "@angular/core";
+import * as XLSX from 'xlsx';
 import { MatDialog } from "@angular/material/dialog";
 import { MatSelectChange } from "@angular/material/select";
 import { select, Store } from "@ngrx/store";
@@ -50,6 +51,15 @@ export class PriceListComponent implements OnInit, OnChanges {
   @Input() paymentTypes: PaymentTypeInterface[];
   @Input() departmentId: string;
   currentDepartmentId: string;
+
+  testdata: any[] = [
+   
+    { name: "John", age: 30, city: "Dar es salaam" },
+    { name: "Smith", age: 25, city: "Mwanza" },
+    { name: "Johnson", age: 35, city: "Arusha" }
+  
+  ];
+
   priceList: any[];
   priceList$: Observable<any[]>;
 
@@ -328,4 +338,21 @@ export class PriceListComponent implements OnInit, OnChanges {
     this.currentDepartmentId = this.selectedPriceListDepartment?.uuid;
     this.loadData();
   }
+
+  DownloadPriceList(){
+
+    // this.priceList = [ ...this.priceList];
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.testdata);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* generate an excel file and prompt the user to download it */
+    XLSX.writeFile(wb, 'data.xlsx');
+  }
+
+  uploadExcelFile(event) {
+    // here it is needed a Logic for handling the file upload goes here
+    let file = event.target.files[0];
+  }
+
+
 }
